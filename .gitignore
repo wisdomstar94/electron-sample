@@ -24,3 +24,7 @@ yarn-error.log*
 
 # build
 build
+
+# env
+.env
+electron-builder.env

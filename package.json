@@ -1,6 +1,6 @@
 {
   "name": "electron-sample",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "homepage": "./",
   "dependencies": {
@@ -11,7 +11,9 @@
     "@types/node": "^16.18.40",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "dotenv": "^16.3.1",
     "electron-is-dev": "^2.0.0",
+    "env-cmd": "^10.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -27,11 +29,15 @@
     "electron:build": "tsc --project ./tsconfig.electron.json",
     "electron:react-wait:start": "wait-on http://127.0.0.1:3000 && npm run electron:start",
     "dev": "concurrently -n react,electron \"npm run react:start\" \"npm run electron:react-wait:start\"",
-    "pack": "npm run electron:build && npm run react:build && electron-builder --dir",
-    "build": "npm run electron:build && npm run react:build && electron-builder build",
-    "build:osx": "npm run build -- --mac",
-    "build:linux": "npm run build -- --linux",
-    "build:win": "npm run build -- --win"
+    "build": "npm run electron:build && npm run react:build && electron-builder build --config electron-builder-config.js",
+    "pack": "npm run build -- --publish never",
+    "pack:deploy": "npm run build -- --publish always",
+    "pack:win": "npm run build -- --win --publish never",
+    "pack:win:deploy": "npm run build -- --win --publish always",
+    "pack:mac": "npm run build -- --mac --publish never",
+    "pack:mac:deploy": "npm run build -- --mac --publish always",
+    "pack:linux": "npm run build -- --linux --publish never",
+    "pack:linux:deploy": "npm run build -- --linux --publish always"
   },
   "eslintConfig": {
     "extends": [
@@ -58,56 +64,5 @@
     "electron-builder": "^24.6.3",
     "wait-on": "^7.0.1"
   },
-  "main": "./build/electron.js",
-  "build": {
-    "productName": "electron-sample",
-    "appId": "electron-sample",
-    "asar": true,
-    "protocols": {
-      "name": "electron-sample",
-      "schemes": [
-        "electron-sample"
-      ]
-    },
-    "mac": {
-      "target": [
-        "default"
-      ]
-    },
-    "dmg": {
-      "title": "tournant"
-    },
-    "win": {
-      "target": [
-        "zip",
-        "nsis"
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb",
-        "rpm",
-        "zip",
-        "tar.gz"
-      ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": false,
-      "installerLanguages": [
-        "en_US",
-        "ko_KR"
-      ],
-      "language": "1042"
-    },
-    "files": [
-      "build/**/*",
-      "package.json"
-    ],
-    "directories": {
-      "output": "build",
-      "app": "."
-    }
-  }
+  "main": "./build/electron.js"
 }

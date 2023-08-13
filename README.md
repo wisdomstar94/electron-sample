@@ -1,7 +1,7 @@
 # electron-sample
 본 레포지토리는 일렉트론 샘플 프로젝트 입니다. 프론트는 리액트를 사용합니다.
 
-<br />
+<br /><br />
 
 # 본 레포지토리 구성 과정
 1. 아래 명령어로 리액트 프로젝트 생성
@@ -11,7 +11,7 @@ npx create-react-app electron-sample --template typescript
 
 2. 필요한 패키지 설치
 ```
-npm i -D concurrently cross-env electron electron-builder wait-on
+npm i -D dotenv concurrently cross-env electron electron-builder wait-on
 ```
 
 3. tsconfig.json 내용을 아래와 같이 편집
@@ -65,29 +65,11 @@ npm i -D concurrently cross-env electron electron-builder wait-on
 }
 ```
 
-5. package.json 을 아래와 같이 편집
+5. package.json 내용 중 아래 항목을 다음과 같이 편집
 ```
 {
-  "name": "electron-sample",
-  "version": "0.0.1",
-  "private": false,
-  "homepage": "./",
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.40",
-    "@types/react": "^18.2.20",
-    "@types/react-dom": "^18.2.7",
-    "electron-is-dev": "^2.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
-  },
   "scripts": {
+    // ...
     "react:start": "cross-env BROWSER=none BUILD_PATH='./build/react' react-scripts start",
     "react:build": "BUILD_PATH='./build/react' react-scripts build",
     "react:test": "BUILD_PATH='./build/react' react-scripts test",
@@ -96,88 +78,229 @@ npm i -D concurrently cross-env electron electron-builder wait-on
     "electron:build": "tsc --project ./tsconfig.electron.json",
     "electron:react-wait:start": "wait-on http://127.0.0.1:3000 && npm run electron:start",
     "dev": "concurrently -n react,electron \"npm run react:start\" \"npm run electron:react-wait:start\"",
-    "pack": "npm run electron:build && npm run react:build && electron-builder --dir",
-    "build": "npm run electron:build && npm run react:build && electron-builder build",
-    "build:osx": "npm run build -- --mac",
-    "build:linux": "npm run build -- --linux",
-    "build:win": "npm run build -- --win"
+    // ...
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.0",
-    "cross-env": "^7.0.3",
-    "electron": "^25.5.0",
-    "electron-builder": "^24.6.3",
-    "wait-on": "^7.0.1"
-  },
+  // ...
   "main": "./build/electron.js",
-  "build": {
-    "productName": "electron-sample",
-    "appId": "electron-sample",
-    "asar": true,
-    "protocols": {
-      "name": "electron-sample",
-      "schemes": [
-        "electron-sample"
-      ]
-    },
-    "mac": {
-      "target": [
-        "default"
-      ]
-    },
-    "dmg": {
-      "title": "tournant"
-    },
-    "win": {
-      "target": [
-        "zip",
-        "nsis"
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb",
-        "rpm",
-        "zip",
-        "tar.gz"
-      ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": false,
-      "installerLanguages": [
-        "en_US",
-        "ko_KR"
-      ],
-      "language": "1042"
-    },
-    "files": [
-      "build/**/*",
-      "package.json"
-    ],
-    "directories": {
-      "output": "build",
-      "app": "."
-    }
-  }
+  // ...
 }
 ```
+
+<br /><br />
+
+# 빌드 및 자동 업데이트 구성 과정 (aws s3 이용)
+1. AWS s3 페이지에 접속하여 버킷 생성
+
+https://s3.console.aws.amazon.com/s3/home?region=ap-northeast-2#
+
+2. 버킷의 정책을 아래와 같이 편집
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowAppS3Releases",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "s3:AbortMultipartUpload",
+        "s3:GetObject",
+        "s3:GetObjectAcl",
+        "s3:GetObjectVersion",
+        "s3:ListMultipartUploadParts",
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      "Resource": "arn:aws:s3:::YOUR BUCKET/*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "s3:ListBucket",
+        "s3:ListBucketMultipartUploads"
+      ],
+      "Resource": "arn:aws:s3:::YOUR BUCKET"
+    }
+  ]
+}
+```
+
+3. 버킷의 객체 소유권을 "ACL 활성화됨" 으로 설정
+- "ACL이 복원된다는 것을 확인합니다." 에 체크
+- 객체 소유권은 "버킷 소유자 선호" 선택
+
+4. aws iam 에서 사용자 및 키 생성
+
+https://us-east-1.console.aws.amazon.com/iamv2/home?region=ap-northeast-2#/users/create
+
+5. [사용자] -> [<u>생성한 사용자이름</u>] -> [보안 자격 증명] 에 들어가 엑세스 키를 생성
+- 사용 사례는 "Command Line Interface(CLI)" 을 선택합니다.
+
+6. 사용자의 권한에 아래 JSON 정책 내용을 추가합니다.
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Effect": "Allow",
+			"Action": [
+				"s3:PutObject",
+				"s3:PutObjectAcl",
+				"s3:GetObject",
+				"s3:GetObjectAcl",
+				"s3:GetBucket",
+				"s3:GetBucketAcl"
+			],
+			"Resource": "arn:aws:s3:::my-samples-bucket/*"
+		}
+	]
+}
+```
+
+7. package.json 에 아래 내용 추가 작성
+```
+{
+  // ...
+  "script": {
+    // ...
+    "build": "npm run electron:build && npm run react:build && electron-builder build --config electron-builder-config.js",
+    "pack": "npm run build -- --publish never",
+    "pack:deploy": "npm run build -- --publish always",
+    "pack:win": "npm run build -- --win --publish never",
+    "pack:win:deploy": "npm run build -- --win --publish always",
+    "pack:mac": "npm run build -- --mac --publish never",
+    "pack:mac:deploy": "npm run build -- --mac --publish always",
+    "pack:linux": "npm run build -- --linux --publish never",
+    "pack:linux:deploy": "npm run build -- --linux --publish always",
+    // ...
+  },
+  // ...
+}
+```
+
+8. electron-builder-config.js 파일 생성 후 아래와 같이 작성
+```
+require('dotenv').config();
+
+/** @type {import('electron-builder').Configuration} */
+const config = {
+  productName: "electron-sample",
+  appId: "electron-sample",
+  asar: true,
+  protocols: {
+    name: "electron-sample",
+    schemes: [ 
+      'electron-sample',
+    ],
+  },
+  publish: { 
+    provider: "s3",
+    bucket: process.env.S3_DEPLOY_BUCKET_NAME,
+    region: process.env.S3_DEPLOY_BUCKET_REGION,
+    acl: "public-read",
+  },
+  mac: {
+    target: [
+      "default",
+    ],
+  },
+  dmg: {
+    title: "tournant",
+  },
+  win: {
+    target: [
+      "zip",
+      "nsis",
+    ],
+  },
+  linux: {
+    target: [
+      "AppImage",
+      "deb",
+      "rpm",
+      "zip",
+      "tar.gz",
+    ],
+  },
+  nsis: {
+    oneClick: false,
+    allowToChangeInstallationDirectory: false,
+    installerLanguages: [
+      "en_US",
+      "ko_KR",
+    ],
+    language: "1042",
+  },
+  files: [
+    "build/**/*",
+    "package.json",
+  ],
+  directories: {
+    output: "build",
+    app: ".",
+  },
+};
+
+module.exports = config;
+```
+
+9. .env 파일 생성 후 아래와 같이 작성
+```
+S3_DEPLOY_BUCKET_NAME=버킷이름
+S3_DEPLOY_BUCKET_REGION=버킷리전
+```
+
+10. AWS-CLI 설치
+
+https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-chap-install.html
+
+11. aws 환경설정 진행
+```
+aws configure
+```
+- AWS Access Key ID : 엑세스키 입력
+- AWS Secret Access Key : 시크릿키 입력
+- Default region name : 리전 입력
+- Default output format : json
+
+(한국 리전은 "ap-northeast-2" 입니다.)<br />
+이제 이 pc 에서 s3 에 업로드 가능
+
+12. 이제 아래 명령어들로 패키징 및 배포 가능
+
+-- window 앱으로 패키징
+```
+npm run pack:win
+```
+<br />
+
+-- window 앱으로 패키징하고 s3에 배포하기
+```
+npm run pack:win:deploy
+```
+<br />
+
+-- mac 앱으로 패키징
+```
+npm run pack:mac
+```
+<br />
+
+-- mac 앱으로 패키징하고 s3에 배포하기
+```
+npm run pack:mac:deploy
+```
+<br />
+
+-- linux 앱으로 패키징
+```
+npm run pack:linux
+```
+<br />
+
+-- linux 앱으로 패키징하고 s3에 배포하기
+```
+npm run pack:linux:deploy
+```
+<br />
