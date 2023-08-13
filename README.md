@@ -88,7 +88,7 @@ npm i -D dotenv concurrently cross-env electron electron-builder wait-on
 
 <br /><br />
 
-# 빌드 및 자동 업데이트 구성 과정 (aws s3 이용)
+# 빌드 및 배포 구성 과정 (aws s3 이용)
 1. AWS s3 페이지에 접속하여 버킷 생성
 
 https://s3.console.aws.amazon.com/s3/home?region=ap-northeast-2#
@@ -304,3 +304,6 @@ npm run pack:linux
 npm run pack:linux:deploy
 ```
 <br />
+
+# 자동 업데이트 구성 과정 (electron-updater)
+내용 준비중...
