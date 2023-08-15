@@ -14,7 +14,7 @@ npx create-react-app electron-sample --template typescript
 npm i -D dotenv concurrently cross-env electron electron-builder wait-on cpy-cli del-cli
 ```
 ```
-npm i react-router-dom
+npm i react-router-dom app-root-path electron-log@beta
 ```
 
 3. tsconfig.json 내용을 아래와 같이 편집
@@ -80,7 +80,9 @@ npm i react-router-dom
     "electron:start": "electron .",
     "electron:build": "tsc --project ./tsconfig.electron.json",
     "electron:react-wait:start": "wait-on http://127.0.0.1:3000 && npm run electron:start",
-    "dev": "concurrently -n react,electron \"npm run react:start\" \"npm run electron:react-wait:start\"",
+    "dev": "npm run del:build && npm run electron:build && npm run copy:env && concurrently -n react,electron \"npm run react:start\" \"npm run electron:react-wait:start\"",
+    "copy:env": "cpy ./.env ./build --dot",
+    "del:build": "del-cli ./build",
     // ...
   },
   // ...
@@ -167,8 +169,6 @@ https://us-east-1.console.aws.amazon.com/iamv2/home?region=ap-northeast-2#/users
   // ...
   "script": {
     // ...
-    "copy:env": "cpy ./.env ./build --dot",
-    "del:build": "del-cli ./build",
     "build": "npm run del:build && npm run electron:build && npm run react:build && npm run copy:env && electron-builder build --config electron-builder-config.js",
     "pack": "npm run build -- --publish never",
     "pack:deploy": "npm run build -- --publish always",

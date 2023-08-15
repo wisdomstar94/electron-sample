@@ -24,7 +24,11 @@ yarn-error.log*
 
 # build
 build
+src-electron/preload/preload.js
 
 # env
 .env
 electron-builder.env
+
+# log
+logs

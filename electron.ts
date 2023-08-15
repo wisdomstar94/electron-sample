@@ -2,6 +2,22 @@ import * as path from 'path';
 import { app, BrowserWindow } from 'electron';
 import isDev from 'electron-is-dev';
 import { checkForUpdates } from './src-electron/auto-update/auto-update';
+import './src-electron/listeners/listeners';
+import appRootPath from 'app-root-path';
+import log from 'electron-log';
+
+if (isDev) {
+  log.initialize({ preload: true, spyRendererConsole: true });
+  log.transports.file.resolvePathFn = (variables: log.PathVariables, message?: log.LogMessage | undefined) => {
+    return path.join(appRootPath.toString(), 'logs', 'electron.log');
+  };
+  console.log = log.log;
+} else {
+  // console.log = log.log;
+  // on Linux: ~/.config/{app name}/logs/main.log
+  // on macOS: ~/Library/Logs/{app name}/main.log
+  // on Windows: %USERPROFILE%\AppData\Roaming\{app name}\logs\main.log
+}
 
 const BASE_URL = 'http://localhost:3000';
 
@@ -13,7 +29,8 @@ function createMainWindow(): void {
     height: 1080,
     webPreferences: {
       contextIsolation: true,
-      nodeIntegration: true,
+      nodeIntegration: false,
+      preload: path.join(__dirname, 'src-electron', 'preload', 'preload.js'),
     },
   });
 
@@ -34,6 +51,7 @@ function createMainWindow(): void {
 }
 
 app.on('ready', (): void => {
+  console.log('....reday!!!!!!');
   createMainWindow();
   checkForUpdates();
 });
