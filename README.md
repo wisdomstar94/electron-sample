@@ -247,11 +247,12 @@ const config = {
 module.exports = config;
 ```
 
-9. .env 파일 생성 후 아래와 같이 작성
-```
-S3_DEPLOY_BUCKET_NAME=버킷이름
-S3_DEPLOY_BUCKET_REGION=버킷리전
-```
+9. .env.sample 파일을 .env 으로 이름 변경 후 key 에 맞는 값 작성
+
+| key | description |
+| --- | --- | 
+| S3_DEPLOY_BUCKET_NAME | 배포목적지버킷이름 |
+| S3_DEPLOY_BUCKET_REGION | 배포목적지버킷리전 |
 
 * 본 레포지토리에서는 .env 파일이 일렉트론 패키징 될 때 포함되게 설정되어 있습니다. 그러므로 클라이언트에 노출 되면 안되는 값들은 .env 파일에 기재하면 안되며 별도로 관리 해주어야 합니다.
 
