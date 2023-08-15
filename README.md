@@ -11,7 +11,7 @@ npx create-react-app electron-sample --template typescript
 
 2. 필요한 패키지 설치
 ```
-npm i -D dotenv concurrently cross-env electron electron-builder wait-on
+npm i -D dotenv concurrently cross-env electron electron-builder wait-on cpy-cli del-cli
 ```
 
 3. tsconfig.json 내용을 아래와 같이 편집
@@ -51,7 +51,7 @@ npm i -D dotenv concurrently cross-env electron electron-builder wait-on
   "compilerOptions": {
     "module": "commonjs",
     "noImplicitAny": true,
-    "sourceMap": true,
+    "sourceMap": false,    
     "outDir": "build",
     "baseUrl": ".",
     "esModuleInterop": true,
@@ -164,7 +164,9 @@ https://us-east-1.console.aws.amazon.com/iamv2/home?region=ap-northeast-2#/users
   // ...
   "script": {
     // ...
-    "build": "npm run electron:build && npm run react:build && electron-builder build --config electron-builder-config.js",
+    "copy:env": "cpy ./.env ./build --dot",
+    "del:build": "del-cli ./build",
+    "build": "npm run del:build && npm run electron:build && npm run react:build && npm run copy:env && electron-builder build --config electron-builder-config.js",
     "pack": "npm run build -- --publish never",
     "pack:deploy": "npm run build -- --publish always",
     "pack:win": "npm run build -- --win --publish never",
@@ -172,7 +174,7 @@ https://us-east-1.console.aws.amazon.com/iamv2/home?region=ap-northeast-2#/users
     "pack:mac": "npm run build -- --mac --publish never",
     "pack:mac:deploy": "npm run build -- --mac --publish always",
     "pack:linux": "npm run build -- --linux --publish never",
-    "pack:linux:deploy": "npm run build -- --linux --publish always",
+    "pack:linux:deploy": "npm run build -- --linux --publish always"
     // ...
   },
   // ...
@@ -250,6 +252,8 @@ module.exports = config;
 S3_DEPLOY_BUCKET_NAME=버킷이름
 S3_DEPLOY_BUCKET_REGION=버킷리전
 ```
+
+* 본 레포지토리에서는 .env 파일이 일렉트론 패키징 될 때 포함되게 설정되어 있습니다. 그러므로 클라이언트에 노출 되면 안되는 값들은 .env 파일에 기재하면 안되며 별도로 관리 해주어야 합니다.
 
 10. AWS-CLI 설치
 

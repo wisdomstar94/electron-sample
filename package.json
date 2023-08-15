@@ -30,7 +30,9 @@
     "electron:build": "tsc --project ./tsconfig.electron.json",
     "electron:react-wait:start": "wait-on http://127.0.0.1:3000 && npm run electron:start",
     "dev": "concurrently -n react,electron \"npm run react:start\" \"npm run electron:react-wait:start\"",
-    "build": "npm run electron:build && npm run react:build && electron-builder build --config electron-builder-config.js",
+    "copy:env": "cpy ./.env ./build --dot",
+    "del:build": "del-cli ./build",
+    "build": "npm run del:build && npm run electron:build && npm run react:build && npm run copy:env && electron-builder build --config electron-builder-config.js",
     "pack": "npm run build -- --publish never",
     "pack:deploy": "npm run build -- --publish always",
     "pack:win": "npm run build -- --win --publish never",
@@ -60,7 +62,9 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.0",
+    "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
+    "del-cli": "^5.0.0",
     "electron": "^25.5.0",
     "electron-builder": "^24.6.3",
     "wait-on": "^7.0.1"

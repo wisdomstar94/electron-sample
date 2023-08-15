@@ -1,9 +1,15 @@
 import { dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import path from 'path';
+import { config } from 'dotenv';
+config({
+  path: path.join(__dirname, '..', '..', '.env'),
+});
 
 autoUpdater.setFeedURL({
   provider: 's3',
-  bucket: 'electron-sample-bucket',
+  bucket: process.env.S3_DEPLOY_BUCKET_NAME,
+  region: process.env.S3_DEPLOY_BUCKET_REGION,
   acl: 'public-read',
 });
 
