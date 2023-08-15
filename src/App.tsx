@@ -1,26 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { UpdatePage } from './pages/update/UpdatePage';
+import { HashRouter, Route, Routes } from 'react-router-dom';
+import { TestPage } from './pages/update/test/test.page';
 
-function App() {
+export default function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <HashRouter>
+        <Routes>
+          <Route path="/update/*" element={<UpdatePage />}>
+            <Route path="test" element={<TestPage />}></Route>  
+          </Route>
+        </Routes>
+      </HashRouter>
     </div>
   );
 }
-
-export default App;

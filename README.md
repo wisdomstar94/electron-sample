@@ -13,6 +13,9 @@ npx create-react-app electron-sample --template typescript
 ```
 npm i -D dotenv concurrently cross-env electron electron-builder wait-on cpy-cli del-cli
 ```
+```
+npm i react-router-dom
+```
 
 3. tsconfig.json 내용을 아래와 같이 편집
 ```
