@@ -6,6 +6,7 @@ import './src-electron/listeners/listeners';
 import appRootPath from 'app-root-path';
 import log from 'electron-log';
 import { windowLoadUrlOrFile } from './src-electron/functions/common';
+import { mainManager } from './src-electron/functions/main-manager';
 
 if (isDev) {
   log.initialize({ preload: true, spyRendererConsole: true });
@@ -33,6 +34,9 @@ function createMainWindow(): void {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show();
+    mainManager.sendToRenderer(mainWindow?.webContents, 'current_version', {
+      currentVersion: app.getVersion(),
+    });
   });
 
   windowLoadUrlOrFile(mainWindow, '');

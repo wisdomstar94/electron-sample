@@ -4,10 +4,15 @@ import path from 'path';
 import { config } from 'dotenv';
 import { windowLoadUrlOrFile } from '../functions/common';
 import { mainManager } from '../functions/main-manager';
+import isDev from 'electron-is-dev';
 
 config({
   path: path.join(__dirname, '..', '..', '.env'),
 });
+
+if (isDev) {
+  autoUpdater.forceDevUpdateConfig = true;
+}
 
 /**
  * ******************************************************************************
@@ -36,6 +41,7 @@ function getUpdateWindow() {
     });
 
     updateWindow.on('ready-to-show', () => {
+      updateWindow?.show();
       mainManager.sendToRenderer(updateWindow?.webContents, 'latest_version', {
         currentVersion: app.getVersion(),
         latestVersion: updateInfo?.version,
@@ -60,20 +66,12 @@ autoUpdater.on('checking-for-update', () => {
 
 autoUpdater.on('update-available', (info) => {
   updateInfo = info;
-  const targetWindow = getUpdateWindow();
-  windowLoadUrlOrFile(targetWindow, '/update/available');
-  targetWindow.show();
   console.info('업데이트가 가능합니다.');
+  // 업데이트 가능하면 자동으로 다운로드가 진행됨.
 });
 
 autoUpdater.on('update-not-available', (info) => {
   console.info('현재 최신버전입니다.');
-  dialog.showMessageBox({
-    type: 'info',
-    buttons: ['Ok'],
-    title: '현재 최신버전입니다',
-    message: '현재 최신버전입니다',
-  });
 });
 
 autoUpdater.on('error', (err) => {
@@ -82,12 +80,19 @@ autoUpdater.on('error', (err) => {
     type: 'info',
     buttons: ['Ok'],
     title: '에러 발생',
-    message: '에러가 발생하였습니다',
+    message: '업데이트 도중 에러가 발생하였습니다',
     detail: JSON.stringify(err),
   });
 });
 
+autoUpdater.once('download-progress', (progressObj) => {
+  const targetWindow = getUpdateWindow();
+  windowLoadUrlOrFile(targetWindow, '/update/downloading');
+  targetWindow.show();
+});
+
 autoUpdater.on('download-progress', (progressObj) => {
+  // console.info('download-progress...', JSON.stringify(progressObj));
   const targetWindow = getUpdateWindow();
   mainManager.sendToRenderer(targetWindow.webContents, 'download_progress', {
     progressObj,

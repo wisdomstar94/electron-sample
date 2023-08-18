@@ -25,6 +25,7 @@ yarn-error.log*
 # build
 build
 src-electron/preload/preload.js
+dev-app-update.yml
 
 # env
 .env

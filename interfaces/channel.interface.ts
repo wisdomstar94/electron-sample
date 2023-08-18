@@ -15,6 +15,10 @@ export declare namespace IChannel {
     latestVersion?: string;
   }
 
+  export interface CurrentVersionChannelPayload {
+    currentVersion?: string;
+  }
+
   export interface DownloadProgressChannelPayload {
     progressObj?: ProgressInfo;
   }
@@ -22,6 +26,7 @@ export declare namespace IChannel {
   export interface RendererChannelMap { 
     'test_event_2': TestEvent2ChannelPayload;
     'latest_version': LatestVersionChannelPayload;
+    'current_version': CurrentVersionChannelPayload;
     'download_progress': DownloadProgressChannelPayload;
     '': {};
   }

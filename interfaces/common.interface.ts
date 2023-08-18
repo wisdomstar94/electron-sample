@@ -19,6 +19,5 @@ export declare namespace ICommon {
     listen: (channel: IChannel.RendererChannel, func: (event: Electron.IpcRendererEvent, ...args: any) => void) => void;
     unlisten: (channel: IChannel.RendererChannel, func: (event: Electron.IpcRendererEvent, ...args: any) => void) => void;
     unlistenAll: (channel: IChannel.RendererChannel) => void;
-    version: string;
   }
 }

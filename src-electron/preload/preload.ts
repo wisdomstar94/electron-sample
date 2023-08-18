@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, app } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 import { ICommon } from '../../interfaces/common.interface';
 
 const electronApi: ICommon.ElectronApi = {
@@ -14,7 +14,6 @@ const electronApi: ICommon.ElectronApi = {
   unlistenAll: (channel) => {
     ipcRenderer.removeAllListeners(channel);
   },
-  version: app.getVersion(),
 };
 
 contextBridge.exposeInMainWorld('electronApi', electronApi);
