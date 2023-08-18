@@ -10,7 +10,7 @@ config({
 export function windowLoadUrlOrFile(browserWindow: BrowserWindow, url: string) {
   if (isDev) {
     let applyUrl = process.env.DEV_FRONT_BASE_URL ?? '';
-    applyUrl += url;
+    applyUrl += '#' + url;
     browserWindow.loadURL(applyUrl);
     browserWindow.webContents.openDevTools();
   } else {
