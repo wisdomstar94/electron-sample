@@ -12,6 +12,6 @@
   },
   "include": [
     "./electron.ts",
-    "./src-electron/preload/preload.ts"
+    "./src-electron/preload/**/*"
   ]
 }

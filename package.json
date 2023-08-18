@@ -1,6 +1,6 @@
 {
   "name": "electron-sample",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "private": false,
   "homepage": "./",
   "dependencies": {
@@ -70,6 +70,7 @@
     "del-cli": "^5.0.0",
     "electron": "^25.5.0",
     "electron-builder": "^24.6.3",
+    "tailwindcss": "^3.3.3",
     "wait-on": "^7.0.1"
   },
   "main": "./build/electron.js"

@@ -1,6 +1,7 @@
 import { IUseElectronApiManager } from "./use-electron-api-manager.interface";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ICommon } from '../../../interfaces/common.interface';
+import { IChannel } from "../../../interfaces/channel.interface";
 
 declare global {
   interface Window {
@@ -8,18 +9,18 @@ declare global {
   }
 }
 
-export function useElectronApiManager(props: IUseElectronApiManager.Props) {
+export function useElectronApiManager<T extends (keyof IChannel.RendererChannelMap)[]>(props?: IUseElectronApiManager.Props<T>) {
   const {
-    listenerItems,
-  } = props;
+    listeners,
+  } = props ?? {};
   const [electronApi, setElectronApi] = useState<ICommon.ElectronApi>();
   const isEnableElectronApi = useMemo(() => {
     if (electronApi === undefined) return false;
     return true;
   }, [electronApi]);
   const pureListenerItems = useRef<Map<string, IUseElectronApiManager.PureListenerItem>>(new Map());
-  const listenerItemsRef = useRef<IUseElectronApiManager.ListenerItem[]>([]);
-  listenerItemsRef.current = listenerItems;
+  const listenersRef = useRef<IUseElectronApiManager.Listeners<T>>();
+  listenersRef.current = listeners;
 
   useEffect(() => {
     setElectronApi(window.electronApi);
@@ -28,38 +29,39 @@ export function useElectronApiManager(props: IUseElectronApiManager.Props) {
   useEffect(() => {
     if (isEnableElectronApi !== true) return;
     if (electronApi === undefined) return;
-    if (listenerItems.length === 0) return;
+    if (listeners === undefined) return;
+    if (listeners.length === 0) return;
     const pureListenerItemsRef = pureListenerItems.current;
 
-    listenerItems.forEach((item) => {
-      let pureListenerItem = pureListenerItemsRef.get(item.eventName);
+    listeners.forEach((listener) => {
+      let pureListenerItem = pureListenerItemsRef.get(listener.channel);
       if (pureListenerItem === undefined) {
-        pureListenerItemsRef.set(item.eventName, {
-          eventName: item.eventName,
+        pureListenerItemsRef.set(listener.channel, {
+          channel: listener.channel,
           callback(event, payload) {
-            const targetListenerItem = listenerItemsRef.current.find(x => x.eventName === item.eventName);
-            if (targetListenerItem !== undefined) {
-              targetListenerItem.callback(event, payload);
+            const targetListener = listenersRef.current?.find(x => x.channel === listener.channel);
+            if (targetListener !== undefined) {
+              targetListener.callback(event, payload);
             }
           },
         });
-        pureListenerItem = pureListenerItemsRef.get(item.eventName);
+        pureListenerItem = pureListenerItemsRef.get(listener.channel);
       }
       if (pureListenerItem === undefined) return;
-      electronApi.unlistenFromMain(item.eventName, pureListenerItem.callback);
-      electronApi.listenFromMain(item.eventName, pureListenerItem.callback);
+      electronApi.unlisten(listener.channel, pureListenerItem.callback);
+      electronApi.listen(listener.channel, pureListenerItem.callback);
     });
 
     return () => {
-      listenerItems.forEach((item) => {
-        const pureListenerItem = pureListenerItemsRef.get(item.eventName);
+      listeners.forEach((listener) => {
+        const pureListenerItem = pureListenerItemsRef.get(listener.channel);
         if (pureListenerItem === undefined) {
           return;
         }
-        electronApi.unlistenFromMain(item.eventName, pureListenerItem.callback);
+        electronApi.unlisten(listener.channel, pureListenerItem.callback);
       });
     };
-  }, [isEnableElectronApi, listenerItems, electronApi]);
+  }, [isEnableElectronApi, listeners, electronApi]);
 
   return {
     isEnableElectronApi,

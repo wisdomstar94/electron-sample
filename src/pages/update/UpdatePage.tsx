@@ -3,9 +3,9 @@ import { useElectronApiManager } from "../../hooks/use-electron-api-manager/use-
 
 export function UpdatePage() {
   const electronApiManager = useElectronApiManager({
-    listenerItems: [
+    listeners: [
       {
-        eventName: 'test_event_2',
+        channel: 'test_event_2',
         callback: (event, payload) => {
           console.log('@test_event_2', {
             event, payload,
@@ -22,7 +22,7 @@ export function UpdatePage() {
         <button 
           onClick={() => {
             electronApiManager.electronApi?.sendToMain('test_event_1', {
-              me: 'web',
+              key3: `hi~ i'm renderer~`,
             });
           }}>ipcMain 에게 test_event_1 이벤트 보내기</button>
       </div>

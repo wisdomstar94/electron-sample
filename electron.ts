@@ -5,6 +5,7 @@ import { checkForUpdates } from './src-electron/auto-update/auto-update';
 import './src-electron/listeners/listeners';
 import appRootPath from 'app-root-path';
 import log from 'electron-log';
+import { windowLoadUrlOrFile } from './src-electron/functions/common';
 
 if (isDev) {
   log.initialize({ preload: true, spyRendererConsole: true });
@@ -19,8 +20,6 @@ if (isDev) {
   // on Windows: %USERPROFILE%\AppData\Roaming\{app name}\logs\main.log
 }
 
-const BASE_URL = 'http://localhost:3000';
-
 let mainWindow: BrowserWindow | null;
 
 function createMainWindow(): void {
@@ -28,8 +27,6 @@ function createMainWindow(): void {
     width: 1920,
     height: 1080,
     webPreferences: {
-      contextIsolation: true,
-      nodeIntegration: false,
       preload: path.join(__dirname, 'src-electron', 'preload', 'preload.js'),
     },
   });
@@ -38,12 +35,7 @@ function createMainWindow(): void {
     mainWindow?.show();
   });
 
-  if (isDev) {
-    mainWindow.loadURL(BASE_URL);
-    mainWindow.webContents.openDevTools();
-  } else {
-    mainWindow.loadFile(path.join(__dirname, 'react', 'index.html'));
-  }
+  windowLoadUrlOrFile(mainWindow, '');
 
   mainWindow.on('closed', (): void => {
     mainWindow = null;
@@ -51,7 +43,6 @@ function createMainWindow(): void {
 }
 
 app.on('ready', (): void => {
-  console.log('....reday!!!!!!');
   createMainWindow();
   checkForUpdates();
 });

@@ -1,18 +1,22 @@
 import { IpcRendererEvent } from "electron";
-import { ICommon } from "../../../interfaces/common.interface";
+import { IChannel } from "../../../interfaces/channel.interface";
 
 export declare namespace IUseElectronApiManager {
-  export interface ListenerItem {
-    eventName: ICommon.ValidListenChannel;
-    callback: (event: IpcRendererEvent, payload: any) => void;
-  }
+  export type Listeners<T extends (keyof IChannel.RendererChannelMap)[]> = [
+    ...{ 
+      [I in keyof T]: { 
+        channel: T[I];
+        callback: (event: Electron.IpcRendererEvent, payload: IChannel.RendererChannelMap[T[I]]) => void;
+      }
+    }
+  ];
 
   export interface PureListenerItem {
-    eventName: ICommon.ValidListenChannel;
+    channel: IChannel.RendererChannel;
     callback: (event: IpcRendererEvent, payload: any) => void;
   }
 
-  export interface Props {
-    listenerItems: ListenerItem[];
+  export interface Props<T extends (keyof IChannel.RendererChannelMap)[]> {
+    listeners?: Listeners<T>;
   }
 }
