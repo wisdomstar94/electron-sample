@@ -5,8 +5,8 @@ import { checkForUpdates } from './src-electron/auto-update/auto-update';
 import './src-electron/listeners/listeners';
 import appRootPath from 'app-root-path';
 import log from 'electron-log';
-import { windowLoadUrlOrFile } from './src-electron/functions/common';
-import { mainManager } from './src-electron/functions/main-manager';
+import { windowLoadUrlOrFile } from './src-electron/utils/common';
+import { mainManager } from './src-electron/utils/main-manager';
 
 if (isDev) {
   log.initialize({ preload: true, spyRendererConsole: true });

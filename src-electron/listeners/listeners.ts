@@ -1,4 +1,4 @@
-import { mainManager } from '../functions/main-manager';
+import { mainManager } from '../utils/main-manager';
 
 // mainManager.listen('test_event_1', (event, payload) => {
 //   console.log('@test_event_1');

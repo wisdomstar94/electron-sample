@@ -2,8 +2,8 @@ import { BrowserWindow, dialog, app } from 'electron';
 import { CancellationToken, UpdateInfo, autoUpdater } from 'electron-updater';
 import path from 'path';
 import { config } from 'dotenv';
-import { windowLoadUrlOrFile } from '../functions/common';
-import { mainManager } from '../functions/main-manager';
+import { windowLoadUrlOrFile } from '../utils/common';
+import { mainManager } from '../utils/main-manager';
 import isDev from 'electron-is-dev';
 
 config({
