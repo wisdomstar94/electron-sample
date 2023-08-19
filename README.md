@@ -34,7 +34,7 @@
 
 1. 업데이트 테스트를 위한 s3 버킷을 별도로 생성한 후 해당 버킷에 대한 정보를 `.env`, `.env.development` 에 기재합니다.
 
-2. 아래 명령어를 실행하여 현재(새로운) 버전을 dev mode 로 패키징하고 테스트용 s3 버킷에 배포합니다.
+2. package.json 의 version 을 현재(새로운) 버전보다 한단계 높은 버전으로 설정한 뒤에(ex. 0.0.7(current) -> 0.0.8) 아래 명령어를 실행하여 dev mode 로 패키징하고 테스트용 s3 버킷에 배포합니다.
 ```
 pack:win:dev:deploy
 ```
@@ -46,8 +46,11 @@ pack:mac:dev:deploy
 ```
 pack:linux:dev:deploy
 ```
+<br />
+※ 여기서 말하는 현재(새로운, current) 버전이란 아직 실서비스용 s3에 배포는 되지 않았고, 앞으로 배포가 될 예정인 버전을 칭합니다. 
+<br /><br />
 
-3. package.json 의 version 을 한단계 낮춘 후(ex. '0.0.8' -> '0.0.7') 아래 명령어를 통해 배포는 하지 않으면서 로컬에 dev mode 로 패키징 합니다.
+3. package.json 의 version 을 다시 원래의 현재(새로운) 버전으로 변경한 뒤(ex. 0.0.8 -> 0.0.7(current)) 아래 명령어를 통해 배포는 하지 않으면서 로컬에 dev mode 로 패키징 합니다.
 ```
 pack:win:dev
 ```
