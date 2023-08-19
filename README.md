@@ -65,7 +65,9 @@ pack:linux:dev
 
 4. 패키징이 완료된 후 `build/` 폴더 밑에 생성된 애플리케이션을 설치 또는 실행합니다.
 
-5. 테스트용 s3 버킷에 올라간 버전으로 정상적으로 업데이트가 잘 되는지 확인합니다.
+5. 테스트용 s3 버킷에 올라간 버전으로 정상적으로 업데이트가 잘 되는지 확인합니다. <br />
+
+※ 업데이트가 잘 되었는지 확인하는 방법은, dev mode 로 패키징 된 경우는 개발자 도구를 열수 있도록 설정해 놓았으며 그렇기 때문에 단축키로 개발자 도구를 연 후 console.log 창에 표시 된 `info` 의 데이터의 `currentVersion` 에 표시된 버전을 확인해보면 됩니다. (해당 로그는 `electron.ts` 파일의 `mainWindow.once('ready-to-show', ...)` 콜백 부분에서 앱이 실행 될 때 초기 표시되는 페이지에 전달하는 이벤트에 의해 표시됩니다.)
 
 <br /><br />
 
@@ -75,6 +77,11 @@ pack:linux:dev
 `interface/channel.interface.ts` 파일에 보면 `IChannel` 네임스페이스 밑에 렌더러 프로세스에서 리스닝 가능한 채널과 데이터의 규격 정보가 맵핑되어 있는 `RendererChannelMap` 인터페이스, 메인 프로세스에서 리스닝 가능한 채널과 데이터의 규격 정보가 맵핑되어 있는 `MainChannelMap` 인터페이스가 존재합니다. 
 <br /><br />
 이 레포지토리를 사용하여 일렉트론 앱을 개발 하실 때, 채널에 대한 데이터 규격을 수정하시려면 `interface/channel.interface.ts` 파일을 수정하시면 됩니다.
+
+<br /><br />
+
+# BrowserWindow 사용시 webPreferences 에는 webPreferencesWithDefaultOptions 사용
+본 레포지토리에는 `src-electron/utils/common.ts` 파일에 `webPreferencesWithDefaultOptions` 라는 함수를 만들어놓았습니다. 해당 함수에는 `BrowserWindow` 로 새로운 창을 생성할 때 `webPreferences` 인자에 들어가야할 기본 값들이 명시되어 있습니다. 그러므로 `BrowserWindow` 를 사용하실 땐 `webPreferencesWithDefaultOptions` 함수를 세트로 같이 사용해주시면 됩니다. 예시는 `electron.ts` 파일을 참조하시면 됩니다.
 
 <br /><br />
 

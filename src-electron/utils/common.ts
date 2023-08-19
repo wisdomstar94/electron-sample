@@ -1,4 +1,4 @@
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, WebPreferences, app } from "electron";
 import isDev from 'electron-is-dev';
 import path from 'path';
 
@@ -13,4 +13,12 @@ export function windowLoadUrlOrFile(browserWindow: BrowserWindow, url: string) {
       hash: url,
     });
   }
+}
+
+export function webPreferencesWithDefaultOptions(webPreferences: WebPreferences): WebPreferences {
+  return {
+    preload: path.join(__dirname, '..', 'preload', 'preload.js'),
+    devTools: isDev,
+    ...webPreferences,
+  };
 }

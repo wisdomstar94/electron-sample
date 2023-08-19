@@ -1,11 +1,10 @@
 import './electron.dotenv';
-import * as path from 'path';
 import { app, BrowserWindow } from 'electron';
 import { checkForUpdates } from './src-electron/auto-update/auto-update';
 import './src-electron/listeners/listeners';
 import log from 'electron-log';
 import isDev from 'electron-is-dev';
-import { windowLoadUrlOrFile } from './src-electron/utils/common';
+import { webPreferencesWithDefaultOptions, windowLoadUrlOrFile } from './src-electron/utils/common';
 import { mainManager } from './src-electron/utils/main-manager';
 
 const electronLogPath = process.env.ELECTRON_LOG_PATH;
@@ -29,9 +28,9 @@ function createMainWindow(): void {
   mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
-    webPreferences: {
-      preload: path.join(__dirname, 'src-electron', 'preload', 'preload.js'),
-    },
+    webPreferences: webPreferencesWithDefaultOptions({
+      // ...
+    }),
   });
 
   mainWindow.once('ready-to-show', () => {
