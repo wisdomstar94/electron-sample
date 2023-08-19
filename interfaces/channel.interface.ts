@@ -24,7 +24,6 @@ export declare namespace IChannel {
   }
 
   export interface RendererChannelMap { 
-    'test_event_2': TestEvent2ChannelPayload;
     'latest_version': LatestVersionChannelPayload;
     'current_version': CurrentVersionChannelPayload;
     'download_progress': DownloadProgressChannelPayload;
@@ -47,7 +46,6 @@ export declare namespace IChannel {
   export type DownloadUpdateChannelPayload = undefined;
 
   export interface MainChannelMap {
-    'test_event_1': TestEvent1ChannelPayload;
     'download_update': DownloadUpdateChannelPayload;
     'execute_update': ExecuteUpdateChannelPayload;
     '': {};

@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useElectronApiManager } from "../../hooks/use-electron-api-manager/use-electron-api-manager.hook";
 
 export function IndexPage() {
@@ -15,9 +14,7 @@ export function IndexPage() {
 
   return (
     <>
-      <div>
-        <Link to="/update">하위 update 페이지로..</Link>
-      </div>
+      index page!
     </>
   );
 }
