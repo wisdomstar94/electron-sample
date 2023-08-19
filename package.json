@@ -1,6 +1,6 @@
 {
   "name": "electron-sample",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "private": false,
   "homepage": "./",
   "dependencies": {
@@ -30,18 +30,33 @@
     "electron:start": "electron .",
     "electron:build": "tsc --project ./tsconfig.electron.json",
     "electron:react-wait:start": "wait-on http://127.0.0.1:3000 && npm run electron:start",
-    "dev": "npm run del:build && npm run electron:build && npm run copy:env && concurrently -n react,electron \"npm run react:start\" \"npm run electron:react-wait:start\"",
+    "dev": "npm run del:build && npm run electron:build && npm run copy:env:dev && concurrently -n react,electron \"npm run react:start\" \"npm run electron:react-wait:start\"",
     "copy:env": "cpy ./.env ./build --dot",
+    "copy:env:dev": "cpy ./.env.development ./build --dot --rename=.env",
     "del:build": "del-cli ./build",
+    
     "build": "npm run del:build && npm run electron:build && npm run react:build && npm run copy:env && electron-builder build --config electron-builder-config.js",
+    "build:dev": "npm run del:build && npm run electron:build && npm run react:build && npm run copy:env:dev && electron-builder build --config electron-builder-config-dev.js",
+
     "pack": "npm run build -- --publish never",
     "pack:deploy": "npm run build -- --publish always",
+    "pack:dev": "npm run build:dev -- --publish never",
+    "pack:dev:deploy": "npm run build:dev -- --publish always",
+     
     "pack:win": "npm run build -- --win --publish never",
     "pack:win:deploy": "npm run build -- --win --publish always",
+    "pack:win:dev": "npm run build:dev -- --win --publish never",
+    "pack:win:dev:deploy": "npm run build:dev -- --win --publish always",
+
     "pack:mac": "npm run build -- --mac --publish never",
     "pack:mac:deploy": "npm run build -- --mac --publish always",
+    "pack:mac:dev": "npm run build:dev -- --mac --publish never",
+    "pack:mac:dev:deploy": "npm run build:dev -- --mac --publish always",
+
     "pack:linux": "npm run build -- --linux --publish never",
-    "pack:linux:deploy": "npm run build -- --linux --publish always"
+    "pack:linux:deploy": "npm run build -- --linux --publish always",
+    "pack:linux:dev": "npm run build:dev -- --linux --publish never",
+    "pack:linux:dev:deploy": "npm run build:dev -- --linux --publish always"
   },
   "eslintConfig": {
     "extends": [

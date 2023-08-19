@@ -1,17 +1,19 @@
+import './electron.dotenv';
 import * as path from 'path';
 import { app, BrowserWindow } from 'electron';
-import isDev from 'electron-is-dev';
 import { checkForUpdates } from './src-electron/auto-update/auto-update';
 import './src-electron/listeners/listeners';
-import appRootPath from 'app-root-path';
 import log from 'electron-log';
+import isDev from 'electron-is-dev';
 import { windowLoadUrlOrFile } from './src-electron/utils/common';
 import { mainManager } from './src-electron/utils/main-manager';
 
-if (isDev) {
+const electronLogPath = process.env.ELECTRON_LOG_PATH;
+if (isDev && typeof electronLogPath === 'string') {
+  console.log(`[Dev] ############### This is Dev Mode! ###############`);
   log.initialize({ preload: true, spyRendererConsole: true });
   log.transports.file.resolvePathFn = (variables: log.PathVariables, message?: log.LogMessage | undefined) => {
-    return path.join(appRootPath.toString(), 'logs', 'electron.log');
+    return electronLogPath;
   };
   console.log = log.log;
 } else {
@@ -34,8 +36,9 @@ function createMainWindow(): void {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show();
-    mainManager.sendToRenderer(mainWindow?.webContents, 'current_version', {
+    mainManager.sendToRenderer(mainWindow?.webContents, 'info', {
       currentVersion: app.getVersion(),
+      isDev,
     });
   });
 

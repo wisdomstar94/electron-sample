@@ -4,9 +4,10 @@ export function IndexPage() {
   useElectronApiManager({
     listeners: [
       {
-        channel: 'current_version',
+        channel: 'info',
         callback(event, payload) {
-          console.log('@current_version.payload', payload);
+          console.log('@info.payload');
+          console.log(payload);
         },
       },
     ],

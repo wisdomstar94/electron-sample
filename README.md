@@ -3,6 +3,13 @@
 
 <br /><br />
 
+# .env 설정
+본 레포지토리에 있는 `.env.example` 파일과 `.env.development.sample` 파일을 각각 `.env`, `.env.development` 으로 이름을 변경한 뒤 `ELECTRON_IS_DEV` 를 제외한 항목들의 내용을 입력해줍니다. 
+<br /><br />
+본 레포지토리에서 `.env` 파일 또는 `.env.development` 파일은 앱이 패키징 될 때 같이 포함되도록 설정되어 있으므로 클라이언트에 노출되지 말아야 할 데이터는 별도로 관리해주셔야 합니다.
+
+<br /><br />
+
 # 프론트엔드
 프론트는 리액트를 사용하여 구성하였고, 여기에 tailwindcss 를 적용하였습니다.
 
@@ -15,6 +22,47 @@
 | --- | --- | 
 | 업데이트 파일 다운로드 현황 페이지 | 업데이트 가능하다고 감지된 경우 바로 다운로드가 시작되며, 다운로드가 시작되면 해당 페이지가 표시되며 다운로드 된 퍼센트 데이터가 표시됩니다. |
 | 업데이트 확인 페이지 | 업데이트 파일이 다운로드 완료 되었으면 본 페이지가 표시되며 업데이트를 시작할 것인지 묻는 내용이 표시됩니다. | 
+
+<br />
+
+업데이트 부분에 대한 커스텀이 필요하시다면 `src-electron/auto-update/auto-update.ts` 파일을 수정하시면 됩니다.
+
+<br /><br />
+
+# 업데이트 테스트 방법
+이전 버전의 앱에서는 업데이트 기능이 정상적으로 작동하고, 현재(새로운) 버전의 앱에서는 모종의 이유로 인해 업데이트 기능이 정상적으로 작동하지 않는 상태에서 현재(새로운) 버전의 앱을 s3 로 배포하게 되면, 이전 버전의 앱에서는 업데이트 체크 후 현재(새로운) 버전으로 업데이트가 되는데 이 때 업데이트 된 버전에서는 업데이트 부분이 제대로 동작하지 않으므로 추후 수정된 버전을 재배포하더라도 새로운 버전으로 업데이트 되도록 하는 것이 불가능해집니다. 이러한 상황을 방지하기 위해서는 업데이트 부분에 대한 테스트가 반드시 필요한데, 본 레포지토리에서는 해당 부분에 대한 것도 고려하였습니다.
+
+1. 업데이트 테스트를 위한 s3 버킷을 별도로 생성한 후 해당 버킷에 대한 정보를 `.env`, `.env.development` 에 기재합니다.
+
+2. 아래 명령어를 실행하여 현재(새로운) 버전을 dev mode 로 패키징하고 테스트용 s3 버킷에 배포합니다.
+```
+pack:win:dev:deploy
+```
+또는
+```
+pack:mac:dev:deploy
+```
+또는
+```
+pack:linux:dev:deploy
+```
+
+3. package.json 의 version 을 한단계 낮춘 후(ex. '0.0.8' -> '0.0.7') 아래 명령어를 통해 배포는 하지 않으면서 로컬에 dev mode 로 패키징 합니다.
+```
+pack:win:dev
+```
+또는
+```
+pack:mac:dev
+```
+또는
+```
+pack:linux:dev
+```
+
+4. 패키징이 완료된 후 `build/` 폴더 밑에 생성된 애플리케이션을 설치 또는 실행합니다.
+
+5. 테스트용 s3 버킷에 올라간 버전으로 정상적으로 업데이트가 잘 되는지 확인합니다.
 
 <br /><br />
 
@@ -40,16 +88,134 @@
 | electron:start | 일렉트론을 로컬에서 테스트하는 용도로 실행하는 스크립트 입니다. | 
 | electron:build | 일렉트론을 .js 등의 파일들로 빌드하는 스크립트 입니다. | 
 | electron:react-wait:start | `wait-on` 패키지를 활용하여, `http://127.0.0.1:3000` 에 대한 정상 응답이 올 때까지 기다리고(즉, 로컬에 리액트가 구동 완료 될 때까지 기다리는 것), 정상 응답이 온 이후에 `electron:start` 스크립트를 실행하는 스크립트 입니다. |
-| dev | `build/` 폴더를 삭제 후, 일렉트론을 빌드하고 `build/` 폴더로 `.env` 파일을 복사합니다. 그리고 `concurrently` 패키지를 활용하여 리액트를 로컬에서 구동하고, 구동이 완료되면 일렉트론도 로컬에서 구동되며 일렉트론 앱이 실행되어집니다. |
+| dev | `build/` 폴더를 삭제 후, 일렉트론을 빌드하고 `build/` 폴더로 `.env` 파일을 복사합니다. 그리고 `concurrently` 패키지를 활용하여 리액트를 로컬에서 구동하고, 구동이 완료되면 일렉트론도 로컬에서 구동되며 일렉트론 앱이 실행되어집니다. (즉, 리액트와 일렉트론 모두 로컬 구동하여 all-in-one 으로 로컬에서 테스트 하고자 한다면 이 스크립트를 실행하시면 됩니다.) |
 | copy:env | `.env` 파일을 `build/` 폴더로 복사하는 스크립트 입니다. | 
+| copy:env:dev | `.env.development` 파일을 `.env` 라는 이름으로 `build/` 폴더로 복사하는 스크립트 입니다. | 
 | del:build | `build/` 폴더를 삭제하는 스크립트 입니다. |
 | build | 일랙트론과 리액트를 모두 빌드하는 스크립트 입니다. | 
 | pack | `build` 스크립트를 실행하되 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
 | pack:deploy | `build` 스크립트를 실행하되 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
+| pack:dev | `build` 스크립트를 실행하되 dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:dev:deploy | `build` 스크립트를 실행하되 dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
 | pack:win | `build` 스크립트를 실행하되 `window` 앱으로 빌드하고 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
 | pack:win:deploy | `build` 스크립트를 실행하되 `window` 앱으로 빌드하고 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
+| pack:win:dev | `build` 스크립트를 실행하되 `window` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:win:dev:deploy | `build` 스크립트를 실행하되 `window` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
 | pack:mac | `build` 스크립트를 실행하되 `mac` 앱으로 빌드하고 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
 | pack:mac:deploy | `build` 스크립트를 실행하되 `mac` 앱으로 빌드하고 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
+| pack:mac:dev | `build` 스크립트를 실행하되 `mac` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:mac:dev:deploy | `build` 스크립트를 실행하되 `mac` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
 | pack:linux | `build` 스크립트를 실행하되 `linux` 앱으로 빌드하고 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
 | pack:linux:deploy | `build` 스크립트를 실행하되 `linux` 앱으로 빌드하고 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
+| pack:linux:dev | `build` 스크립트를 실행하되 `linux` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:linux:dev:deploy | `build` 스크립트를 실행하되 `linux` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
 
+<br /><br />
+
+# s3 버킷 설정
+일렉트론 앱으로 패키징한 파일들은 s3로 업로드 되도록 설정되어 있습니다. 그래서 다음과 같이 버킷 설정이 필요합니다.
+
+1. AWS s3 페이지에 접속하여 버킷 생성
+
+https://s3.console.aws.amazon.com/s3/home?region=ap-northeast-2#
+
+2. 버킷에 아래 권한 정책 적용
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    // 아래 Deny 는 필요 시 설정하세요! 필요 없다면 아래 Deny 정책 부분은 제거하셔도 좋습니다.
+    {
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": "*",
+      "Resource": "arn:aws:s3:::버킷이름/*",
+      "Condition": {
+        "NotIpAddress": {
+          "aws:SourceIp": "접근허용IP"
+        }
+      }
+    },
+    {
+      "Sid": "AllowAppS3Releases",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "s3:AbortMultipartUpload",
+        "s3:GetObject",
+        "s3:GetObjectAcl",
+        "s3:GetObjectVersion",
+        "s3:ListMultipartUploadParts",
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      "Resource": "arn:aws:s3:::버킷이름/*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "s3:ListBucket",
+        "s3:ListBucketMultipartUploads"
+      ],
+      "Resource": "arn:aws:s3:::버킷이름"
+    }
+  ]
+}
+```
+
+3. 버킷의 객체 소유권을 "ACL 활성화됨" 으로 설정
+- "ACL이 복원된다는 것을 확인합니다." 에 체크
+- 객체 소유권은 "버킷 소유자 선호" 선택
+
+4. 실서비스용과 테스트용이 필요하므로 총 2개 s3 버킷을 생성하시면 됩니다.
+
+<br /><br />
+
+# aws cli 설정 (s3로 배포하기 위해 필요한 단계)
+
+1. aws iam 에서 사용자 및 키 생성
+
+https://us-east-1.console.aws.amazon.com/iamv2/home?region=ap-northeast-2#/users/create
+
+2. [사용자] -> <u>생성한 사용자이름</u> -> [보안 자격 증명] 에 들어가 엑세스 키를 생성
+- 사용 사례는 "Command Line Interface(CLI)" 을 선택합니다.
+
+3. 사용자의 권한에 아래 JSON 정책 내용을 추가합니다.
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Effect": "Allow",
+			"Action": [
+				"s3:PutObject",
+				"s3:PutObjectAcl",
+				"s3:GetObject",
+				"s3:GetObjectAcl",
+				"s3:GetBucket",
+				"s3:GetBucketAcl"
+			],
+			"Resource": "arn:aws:s3:::버킷이름/*"
+		}
+	]
+}
+```
+
+4. AWS-CLI 설치
+
+https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-chap-install.html
+
+5. aws 환경설정 진행
+```
+aws configure
+```
+- AWS Access Key ID : 엑세스키 입력
+- AWS Secret Access Key : 시크릿키 입력
+- Default region name : 리전 입력
+- Default output format : json
+
+(한국 리전은 "ap-northeast-2" 입니다.)<br />
+이제 이 pc 에서 s3 에 업로드 가능
+
+<br /><br />

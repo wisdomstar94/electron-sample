@@ -29,7 +29,7 @@ dev-app-update.yml
 
 # env
 .env
-electron-builder.env
+.env.development
 
 # log
 logs
