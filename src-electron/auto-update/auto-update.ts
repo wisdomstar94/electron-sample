@@ -61,21 +61,21 @@ function getUpdateWindow() {
 }
 
 autoUpdater.on('checking-for-update', () => {
-  console.info('업데이트 확인 중...');
+  console.log(`[autoUpdater] : checking-for-update`);
 });
 
 autoUpdater.on('update-available', (info) => {
-  updateInfo = info;
-  console.info('업데이트가 가능합니다.');
   // 업데이트 가능하면 자동으로 다운로드가 진행됨.
+  console.log(`[autoUpdater] : update-available`);
+  updateInfo = info;
 });
 
 autoUpdater.on('update-not-available', (info) => {
-  console.info('현재 최신버전입니다.');
+  console.log(`[autoUpdater] : update-available`);
 });
 
 autoUpdater.on('error', (err) => {
-  console.info('에러가 발생하였습니다. 에러내용 : ' + err);
+  console.error(`[autoUpdater] : error`, err);
   dialog.showMessageBox({
     type: 'info',
     buttons: ['Ok'],
@@ -86,13 +86,14 @@ autoUpdater.on('error', (err) => {
 });
 
 autoUpdater.once('download-progress', (progressObj) => {
+  console.log(`[autoUpdater] : download-progress (once)`, JSON.stringify(progressObj));
   const targetWindow = getUpdateWindow();
   windowLoadUrlOrFile(targetWindow, '/update/downloading');
   targetWindow.show();
 });
 
 autoUpdater.on('download-progress', (progressObj) => {
-  // console.info('download-progress...', JSON.stringify(progressObj));
+  console.log(`[autoUpdater] : download-progress`, JSON.stringify(progressObj));
   const targetWindow = getUpdateWindow();
   mainManager.sendToRenderer(targetWindow.webContents, 'download_progress', {
     progressObj,
@@ -100,7 +101,7 @@ autoUpdater.on('download-progress', (progressObj) => {
 });
 
 autoUpdater.on('update-downloaded', (event) => {
-  console.info('업데이트에 필요한 데이터를 다운로드 받았습니다.');
+  console.log(`[autoUpdater] : update-downloaded`);
   const targetWindow = getUpdateWindow();
   windowLoadUrlOrFile(targetWindow, '/update/downloaded');
   targetWindow.show();
