@@ -229,3 +229,10 @@ aws configure
 이제 이 pc 에서 s3 에 업로드 가능
 
 <br /><br />
+
+# 본 레포지토리 구성에 도움을 준 블로그 및 답변들
+
+| 링크 | 도움을 받은 부분 |
+| --- | --- | 
+| https://kimbiyam.me/posts/react/react-typescript-electron-settings | Electron + Typescript + React 환경을 구축하는데 필요한 부분들이 무엇이 있는지 많은 참고가 되었습니다. |
+| https://stackoverflow.com/a/76926224/20313047 | 메인 프로세스와 렌더러 프로세스간 채널별로 데이터(payload)들도 각각 타입추론이 되게 하고 싶었는데, 이 답변으로 구현할 수 있었습니다. | 
