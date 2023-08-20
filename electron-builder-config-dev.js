@@ -21,6 +21,7 @@ const config = {
     region: process.env.S3_DEV_DEPLOY_BUCKET_REGION,
     acl: "public-read",
   },
+  icon: path.join(__dirname, 'src-electron', 'assets', 'icons', 'app-icon.png'),
   mac: {
     target: [
       "default",
