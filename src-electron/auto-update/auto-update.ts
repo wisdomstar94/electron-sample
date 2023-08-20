@@ -1,7 +1,6 @@
 import { BrowserWindow, dialog, app } from 'electron';
 import { CancellationToken, UpdateInfo, autoUpdater } from 'electron-updater';
-import path from 'path';
-import { windowLoadUrlOrFile } from '../utils/common';
+import { webPreferencesWithDefaultOptions, windowLoadUrlOrFile } from '../utils/common';
 import { mainManager } from '../utils/main-manager';
 import isDev from 'electron-is-dev';
 
@@ -41,9 +40,9 @@ function getUpdateWindow() {
     updateWindow = new BrowserWindow({
       width: 720,
       height: 260,
-      webPreferences: {
-        preload: path.join(__dirname, '..', 'preload', 'preload.js'),
-      },
+      webPreferences: webPreferencesWithDefaultOptions({
+        // ...
+      }),
     });
 
     updateWindow.on('ready-to-show', () => {
