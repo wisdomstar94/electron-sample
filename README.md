@@ -68,7 +68,7 @@ pack:mac:dev
 pack:linux:dev
 ```
 
-4. 패키징이 완료된 후 `build/` 폴더 밑에 생성된 애플리케이션을 설치 또는 실행합니다.
+4. 패키징이 완료된 후 `dist/` 폴더 밑에 생성된 애플리케이션을 설치 또는 실행합니다.
 
 5. 테스트용 s3 버킷에 올라간 버전으로 정상적으로 업데이트가 잘 되는지 확인합니다. <br />
 
@@ -103,27 +103,27 @@ pack:linux:dev
 | electron:start | 일렉트론을 로컬에서 테스트하는 용도로 실행하는 스크립트 입니다. | 
 | electron:build | 일렉트론을 .js 등의 파일들로 빌드하는 스크립트 입니다. | 
 | electron:react-wait:start | `wait-on` 패키지를 활용하여, `http://127.0.0.1:3000` 에 대한 정상 응답이 올 때까지 기다리고(즉, 로컬에 리액트가 구동 완료 될 때까지 기다리는 것), 정상 응답이 온 이후에 `electron:start` 스크립트를 실행하는 스크립트 입니다. |
-| dev | `build/` 폴더를 삭제 후, 일렉트론을 빌드하고 `build/` 폴더로 `.env` 파일을 복사합니다. 그리고 `concurrently` 패키지를 활용하여 리액트를 로컬에서 구동하고, 구동이 완료되면 일렉트론도 로컬에서 구동되며 일렉트론 앱이 실행되어집니다. (즉, 리액트와 일렉트론 모두 로컬 구동하여 all-in-one 으로 로컬에서 테스트 하고자 한다면 이 스크립트를 실행하시면 됩니다.) |
-| copy:env | `.env` 파일을 `build/` 폴더로 복사하는 스크립트 입니다. | 
-| copy:env:dev | `.env.development` 파일을 `.env` 라는 이름으로 `build/` 폴더로 복사하는 스크립트 입니다. | 
-| del:build | `build/` 폴더를 삭제하는 스크립트 입니다. |
+| dev | `dist/` 폴더를 삭제 후, 일렉트론을 빌드하고 `dist/` 폴더로 `.env` 파일을 복사합니다. 그리고 `concurrently` 패키지를 활용하여 리액트를 로컬에서 구동하고, 구동이 완료되면 일렉트론도 로컬에서 구동되며 일렉트론 앱이 실행되어집니다. (즉, 리액트와 일렉트론 모두 로컬 구동하여 all-in-one 으로 로컬에서 테스트 하고자 한다면 이 스크립트를 실행하시면 됩니다.) |
+| copy:env | `.env` 파일을 `dist/` 폴더로 복사하는 스크립트 입니다. | 
+| copy:env:dev | `.env.development` 파일을 `.env` 라는 이름으로 `dist/` 폴더로 복사하는 스크립트 입니다. | 
+| del:dist | `dist/` 폴더를 삭제하는 스크립트 입니다. |
 | build | 일랙트론과 리액트를 모두 빌드하는 스크립트 입니다. | 
-| pack | `build` 스크립트를 실행하되 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
-| pack:deploy | `build` 스크립트를 실행하되 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
-| pack:dev | `build` 스크립트를 실행하되 dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
-| pack:dev:deploy | `build` 스크립트를 실행하되 dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
-| pack:win | `build` 스크립트를 실행하되 `window` 앱으로 빌드하고 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
-| pack:win:deploy | `build` 스크립트를 실행하되 `window` 앱으로 빌드하고 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
-| pack:win:dev | `build` 스크립트를 실행하되 `window` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
-| pack:win:dev:deploy | `build` 스크립트를 실행하되 `window` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
-| pack:mac | `build` 스크립트를 실행하되 `mac` 앱으로 빌드하고 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
-| pack:mac:deploy | `build` 스크립트를 실행하되 `mac` 앱으로 빌드하고 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
-| pack:mac:dev | `build` 스크립트를 실행하되 `mac` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
-| pack:mac:dev:deploy | `build` 스크립트를 실행하되 `mac` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
-| pack:linux | `build` 스크립트를 실행하되 `linux` 앱으로 빌드하고 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
-| pack:linux:deploy | `build` 스크립트를 실행하되 `linux` 앱으로 빌드하고 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
-| pack:linux:dev | `build` 스크립트를 실행하되 `linux` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
-| pack:linux:dev:deploy | `build` 스크립트를 실행하되 `linux` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
+| pack | `dist` 스크립트를 실행하되 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:deploy | `dist` 스크립트를 실행하되 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
+| pack:dev | `dist` 스크립트를 실행하되 dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:dev:deploy | `dist` 스크립트를 실행하되 dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
+| pack:win | `dist` 스크립트를 실행하되 `window` 앱으로 빌드하고 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:win:deploy | `dist` 스크립트를 실행하되 `window` 앱으로 빌드하고 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
+| pack:win:dev | `dist` 스크립트를 실행하되 `window` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:win:dev:deploy | `dist` 스크립트를 실행하되 `window` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
+| pack:mac | `dist` 스크립트를 실행하되 `mac` 앱으로 빌드하고 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:mac:deploy | `dist` 스크립트를 실행하되 `mac` 앱으로 빌드하고 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
+| pack:mac:dev | `dist` 스크립트를 실행하되 `mac` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:mac:dev:deploy | `dist` 스크립트를 실행하되 `mac` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
+| pack:linux | `dist` 스크립트를 실행하되 `linux` 앱으로 빌드하고 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:linux:deploy | `dist` 스크립트를 실행하되 `linux` 앱으로 빌드하고 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
+| pack:linux:dev | `dist` 스크립트를 실행하되 `linux` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
+| pack:linux:dev:deploy | `dist` 스크립트를 실행하되 `linux` 앱으로, dev mode 로 빌드하며 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config-dev.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. (주로 업데이트를 테스트 할 때 사용되는 스크립트 입니다.) |
 
 <br /><br />
 

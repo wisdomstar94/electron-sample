@@ -55,9 +55,12 @@ const config = {
     language: "1042",
   },
   files: [
-    "build/**/*",
+    "dist/**/*",
     "package.json",
   ],
+  extraMetadata: {
+    main: `dist/electron.js`,
+  },
   directories: {
     output: "build",
     app: ".",

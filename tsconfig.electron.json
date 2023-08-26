@@ -3,7 +3,7 @@
     "module": "commonjs",
     "noImplicitAny": true,
     "sourceMap": false,    
-    "outDir": "build",
+    "outDir": "dist",
     "baseUrl": ".",
     "esModuleInterop": true,
     "paths": {
