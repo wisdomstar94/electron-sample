@@ -1,8 +1,10 @@
+import '../../electron.dotenv';
 import { BrowserWindow, dialog, app } from 'electron';
 import { CancellationToken, UpdateInfo, autoUpdater } from 'electron-updater';
-import { webPreferencesWithDefaultOptions, windowLoadUrlOrFile } from '../utils/common';
+import { convertConsoleLog, webPreferencesWithDefaultOptions, windowLoadUrlOrFile } from '../utils/common';
 import { mainManager } from '../utils/main-manager';
-import isDev from 'electron-is-dev';
+import { isDev } from '../utils/is-dev';
+convertConsoleLog();
 
 /**
  * ******************************************************************************
@@ -14,6 +16,7 @@ import isDev from 'electron-is-dev';
  * ******************************************************************************
  */
 if (isDev) {
+  // console.log('@@setFeedURL', { S3_DEV_DEPLOY_BUCKET_NAME: process.env.S3_DEV_DEPLOY_BUCKET_NAME, S3_DEV_DEPLOY_BUCKET_REGION: process.env.S3_DEV_DEPLOY_BUCKET_REGION });
   autoUpdater.setFeedURL({
     provider: 's3',
     bucket: process.env.S3_DEV_DEPLOY_BUCKET_NAME,

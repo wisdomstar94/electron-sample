@@ -1,6 +1,8 @@
+import '../../electron.dotenv';
 import { BrowserWindow, WebPreferences, app } from "electron";
-import isDev from 'electron-is-dev';
 import path from 'path';
+import { isDev } from "./is-dev";
+import log from 'electron-log';
 
 export function windowLoadUrlOrFile(browserWindow: BrowserWindow, url: string) {
   if (isDev && !app.isPackaged) {
@@ -21,4 +23,21 @@ export function webPreferencesWithDefaultOptions(webPreferences: WebPreferences)
     devTools: isDev,
     ...webPreferences,
   };
+}
+
+export function convertConsoleLog() {
+  const electronLogPath = process.env.ELECTRON_LOG_PATH;
+  if (isDev && typeof electronLogPath === 'string') {
+    console.log(`[Dev] ############### This is Dev Mode! ###############`);
+    log.initialize({ preload: true, spyRendererConsole: true });
+    log.transports.file.resolvePathFn = (variables: log.PathVariables, message?: log.LogMessage | undefined) => {
+      return electronLogPath;
+    };
+    console.log = log.log;
+  } else {
+    // console.log = log.log;
+    // on Linux: ~/.config/{app name}/logs/main.log
+    // on macOS: ~/Library/Logs/{app name}/main.log
+    // on Windows: %USERPROFILE%\AppData\Roaming\{app name}\logs\main.log
+  }
 }

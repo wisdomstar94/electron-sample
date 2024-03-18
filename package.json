@@ -1,6 +1,6 @@
 {
   "name": "electron-sample",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "private": false,
   "keywords": [
     "electron",
@@ -13,55 +13,49 @@
   ],
   "homepage": "./",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.40",
-    "@types/react": "^18.2.20",
-    "@types/react-dom": "^18.2.7",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.28",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
     "app-root-path": "^3.1.0",
-    "dotenv": "^16.3.1",
-    "electron-is-dev": "^2.0.0",
-    "electron-log": "^5.0.0-beta.25",
-    "electron-updater": "^6.1.1",
-    "env-cmd": "^10.1.0",
+    "dotenv": "^16.4.5",
+    "electron-log": "^5.1.2",
+    "electron-updater": "^6.1.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0",
+    "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "typescript": "^5.4.2",
+    "web-vitals": "^3.5.2"
   },
   "scripts": {
     "react:start": "cross-env BROWSER=none react-scripts start",
     "react:build": "BUILD_PATH='./dist/react' react-scripts build",
-    "electron:start": "electron .",
+    "electron:start": "env-cmd -f .env.development electron .",
     "electron:build": "tsc --project ./tsconfig.electron.json",
     "electron:react-wait:start": "wait-on http://127.0.0.1:3000 && npm run electron:start",
     "dev": "npm run del:dist && npm run electron:build && npm run copy:env:dev && concurrently -n react,electron \"npm run react:start\" \"npm run electron:react-wait:start\"",
     "copy:env": "cpy ./.env ./dist --dot",
     "copy:env:dev": "cpy ./.env.development ./dist --dot --rename=.env",
     "del:dist": "del-cli ./dist",
-    
-    "build": "npm run del:dist && npm run electron:build && npm run react:build && npm run copy:env && electron-builder build --config electron-builder-config.js",
-    "build:dev": "npm run del:dist && npm run electron:build && npm run react:build && npm run copy:env:dev && electron-builder build --config electron-builder-config-dev.js",
-
+    "del:build": "del-cli ./build",
+    "build": "npm run del:dist && npm run del:build && npm run electron:build && npm run react:build && npm run copy:env && electron-builder build --config electron-builder-config.js",
+    "build:dev": "npm run del:dist && npm run del:build && npm run electron:build && npm run react:build && npm run copy:env:dev && electron-builder build --config electron-builder-config-dev.js",
     "pack": "npm run build -- --publish never",
     "pack:deploy": "npm run build -- --publish always",
     "pack:dev": "npm run build:dev -- --publish never",
     "pack:dev:deploy": "npm run build:dev -- --publish always",
-     
     "pack:win": "npm run build -- --win --publish never",
     "pack:win:deploy": "npm run build -- --win --publish always",
     "pack:win:dev": "npm run build:dev -- --win --publish never",
     "pack:win:dev:deploy": "npm run build:dev -- --win --publish always",
-
     "pack:mac": "npm run build -- --mac --publish never",
     "pack:mac:deploy": "npm run build -- --mac --publish always",
     "pack:mac:dev": "npm run build:dev -- --mac --publish never",
     "pack:mac:dev:deploy": "npm run build:dev -- --mac --publish always",
-
     "pack:linux": "npm run build -- --linux --publish never",
     "pack:linux:deploy": "npm run build -- --linux --publish always",
     "pack:linux:dev": "npm run build:dev -- --linux --publish never",
@@ -86,14 +80,18 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^8.2.0",
+    "concurrently": "^8.2.2",
     "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
-    "del-cli": "^5.0.0",
-    "electron": "^25.5.0",
-    "electron-builder": "^24.6.3",
-    "tailwindcss": "^3.3.3",
-    "wait-on": "^7.0.1"
+    "del-cli": "^5.1.0",
+    "electron": "^29.1.4",
+    "electron-builder": "^24.13.3",
+    "env-cmd": "^10.1.0",
+    "tailwindcss": "^3.4.1",
+    "wait-on": "^7.2.0"
   },
-  "main": "./dist/electron.js"
+  "main": "./dist/electron.js",
+  "overrides": {
+    "typescript": "^5.4.2"
+  }
 }

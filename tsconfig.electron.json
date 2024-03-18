@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "target": "es5",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "noImplicitAny": true,
     "sourceMap": false,    
     "outDir": "dist",
@@ -12,6 +14,7 @@
   },
   "include": [
     "./electron.ts",
+    "./src-electron/**/*",
     "./src-electron/preload/**/*"
   ]
 }

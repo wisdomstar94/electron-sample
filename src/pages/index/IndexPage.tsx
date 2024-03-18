@@ -6,9 +6,9 @@ export function IndexPage() {
   const [info, setInfo] = useState<IChannel.InfoChannelPayload>();
 
   const currentVersion = useMemo(() => {
-    const currentVersion = info?.currentVersion;
-    if (typeof currentVersion !== 'string') return undefined;
-    return `v${currentVersion}`;
+    const v = info?.currentVersion;
+    if (typeof v !== 'string') return undefined;
+    return `v${v}`;
   }, [info?.currentVersion]);
 
   const isDev = useMemo(() => {
