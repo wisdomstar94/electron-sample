@@ -1,6 +1,6 @@
 {
   "name": "electron-sample",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "private": false,
   "keywords": [
     "electron",
@@ -33,7 +33,7 @@
   },
   "scripts": {
     "react:start": "cross-env BROWSER=none react-scripts start",
-    "react:build": "BUILD_PATH='./dist/react' react-scripts build",
+    "react:build": "env-cmd -f .env react-scripts build",
     "electron:start": "env-cmd -f .env.development electron .",
     "electron:build": "tsc --project ./tsconfig.electron.json",
     "electron:react-wait:start": "wait-on http://127.0.0.1:3000 && npm run electron:start",

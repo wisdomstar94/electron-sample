@@ -47,7 +47,6 @@ const config = {
   },
   nsis: {
     oneClick: false,
-    allowToChangeInstallationDirectory: false,
     installerLanguages: [
       "en_US",
       "ko_KR",
