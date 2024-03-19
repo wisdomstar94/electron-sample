@@ -1,20 +1,35 @@
 import '../../electron.dotenv';
-import { BrowserWindow, WebPreferences, app } from "electron";
+import { BrowserWindow, WebPreferences } from "electron";
 import path from 'path';
 import { isDev } from "./is-dev";
 import log from 'electron-log';
 import { ExecException, exec } from "node:child_process";
 
 export function windowLoadUrlOrFile(browserWindow: BrowserWindow, url: string) {
-  if (isDev && !app.isPackaged) {
-    let applyUrl = process.env.DEV_FRONT_BASE_URL ?? '';
-    applyUrl += '#' + url;
-    browserWindow.loadURL(applyUrl);
-    browserWindow.webContents.openDevTools();
-  } else {
-    browserWindow.loadFile(path.join(__dirname, '..', '..', 'react', 'index.html'), {
-      hash: url,
-    });
+  const frontIsWebHosting = parseInt(process.env.FRONT_IS_WEB_HOSTING ?? '1');
+
+  if (frontIsWebHosting === 1) { // 웹호스팅인 경우
+    if (isDev) {
+      let applyUrl = process.env.DEV_FRONT_BASE_URL ?? '';
+      applyUrl += url;
+      browserWindow.loadURL(applyUrl);
+      browserWindow.webContents.openDevTools();
+    } else {
+      let applyUrl = process.env.REAL_FRONT_BASE_URL ?? '';
+      applyUrl += url;
+      browserWindow.loadURL(applyUrl);
+    }
+  } else { // 번들로써 내부에 포함인 경우
+    if (isDev) {
+      let applyUrl = process.env.DEV_FRONT_BASE_URL ?? '';
+      applyUrl += '#' + url;
+      browserWindow.loadURL(applyUrl);
+      browserWindow.webContents.openDevTools();
+    } else {
+      browserWindow.loadFile(path.join(__dirname, '..', '..', 'react', 'index.html'), {
+        hash: url,
+      });
+    }
   }
 }
 
