@@ -3,6 +3,7 @@ import { BrowserWindow, WebPreferences, app } from "electron";
 import path from 'path';
 import { isDev } from "./is-dev";
 import log from 'electron-log';
+import { ExecException, exec } from "node:child_process";
 
 export function windowLoadUrlOrFile(browserWindow: BrowserWindow, url: string) {
   if (isDev && !app.isPackaged) {
@@ -40,4 +41,21 @@ export function convertConsoleLog() {
     // on macOS: ~/Library/Logs/{app name}/main.log
     // on Windows: %USERPROFILE%\AppData\Roaming\{app name}\logs\main.log
   }
+}
+
+export async function commandExecute(command: string) {
+  return await new Promise<{
+    error: ExecException | null,
+    stdout: string,
+    stderr: string,
+  }>(function(resolve) {
+    exec(command, (error, stdout, stderr) => {
+      console.log("STDOUT:", stdout, ", STDERR:", stderr);
+      resolve({
+        stdout,
+        stderr,
+        error,
+      });
+    });
+  })
 }

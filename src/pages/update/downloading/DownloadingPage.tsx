@@ -1,20 +1,22 @@
-import { useState } from "react";
-import { useElectronApiManager } from "../../../hooks/use-electron-api-manager/use-electron-api-manager.hook";
+import { useMemo, useState } from "react";
 import { ProgressInfo } from "electron-updater";
+import { useElectronListener } from "../../../hooks/use-electron-listener/use-electron-listener.hook";
+import { IUseElectronListener } from "../../../hooks/use-electron-listener/use-electron-listener.interface";
 
 export function DownloadingPage() {
   const [progressObj, setProgressObj] = useState<ProgressInfo>();
 
-  useElectronApiManager({
-    listeners: [
-      {
-        channel: 'download_progress',
-        callback(event, payload) {
-          setProgressObj(payload.progressObj);
-        },
-      }
-    ],
-  });
+  const listener = useMemo<IUseElectronListener.Listener<'download_progress'>>(() => {
+    return {
+      channel: 'download_progress',
+      callback(event, payload) {
+        console.log('@@download_progress.payload', payload);
+        setProgressObj(payload.progressObj);
+      },
+    };
+  }, []);
+
+  useElectronListener({ listener });
 
   return (
     <div className="w-full h-full fixed top-0 left-0 flex flex-wrap gap-2 items-center justify-center bg-slate-50">

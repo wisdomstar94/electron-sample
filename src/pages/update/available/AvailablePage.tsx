@@ -1,22 +1,24 @@
-import { useState } from "react";
-import { useElectronApiManager } from "../../../hooks/use-electron-api-manager/use-electron-api-manager.hook";
+import { useMemo, useState } from "react";
+import { IUseElectronListener } from "../../../hooks/use-electron-listener/use-electron-listener.interface";
+import { useElectronListener } from "../../../hooks/use-electron-listener/use-electron-listener.hook";
+import { useElectronApi } from "../../../hooks/use-electron-api/use-electron-api.hook";
 
 export function AvailablePage() {
   const [currentVersion, setCurrentVersion] = useState<string>();
   const [latestVersion, setLatestVersion] = useState<string>();
+  const electronApi = useElectronApi();
 
-  const electronApiManager = useElectronApiManager({
-    listeners: [
-      {
-        channel: 'latest_version',
-        callback(event, payload) {
-          console.log('@latest_version.payload', payload);
-          setCurrentVersion(payload.currentVersion);
-          setLatestVersion(payload.latestVersion);
-        },
-      }
-    ],
-  });
+  const listener = useMemo<IUseElectronListener.Listener<'latest_version'>>(() => {
+    return {
+      channel: 'latest_version',
+      callback(event, payload) {
+        console.log('@latest_version.payload', payload);
+        setCurrentVersion(payload.currentVersion);
+        setLatestVersion(payload.latestVersion);
+      },
+    };
+  }, []);
+  useElectronListener({ listener });
 
   return (
     <div className="w-full h-full fixed top-0 left-0 flex flex-wrap gap-2 items-center justify-center bg-slate-50">
@@ -42,7 +44,7 @@ export function AvailablePage() {
           <button 
             className="inline-flex px-6 py-2 border border-slate-600 cursor-pointer text-sm text-slate-600 hover:bg-slate-200"
             onClick={() => {
-              electronApiManager.electronApi?.sendToMain('download_update', undefined);
+              electronApi?.sendToMain('download_update', undefined);
             }}
             >
             예

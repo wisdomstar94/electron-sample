@@ -5,6 +5,7 @@ import { IndexPage } from './pages/index/IndexPage';
 import { AvailablePage } from './pages/update/available/AvailablePage';
 import { DownloadingPage } from './pages/update/downloading/DownloadingPage';
 import { DownloadedPage } from './pages/update/downloaded/DownloadingPage';
+import { CommandPage } from './pages/command/commandPage';
 
 export default function App() {
   return (
@@ -16,6 +17,8 @@ export default function App() {
             <Route path="available" element={<AvailablePage />}></Route>  
             <Route path="downloading" element={<DownloadingPage />}></Route>
             <Route path="downloaded" element={<DownloadedPage />}></Route>  
+          </Route>
+          <Route path="/command/*" element={<CommandPage />}>
           </Route>
         </Routes>
       </HashRouter>

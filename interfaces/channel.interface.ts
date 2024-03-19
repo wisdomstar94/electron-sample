@@ -20,6 +20,11 @@ export declare namespace IChannel {
     isDev?: boolean;
   }
 
+  export interface CommandResultPayload {
+    stdout: string;
+    stderr: string;
+  }
+
   export interface DownloadProgressChannelPayload {
     progressObj?: ProgressInfo;
   }
@@ -27,6 +32,7 @@ export declare namespace IChannel {
   export interface RendererChannelMap { 
     'latest_version': LatestVersionChannelPayload;
     'info': InfoChannelPayload;
+    'command_result': CommandResultPayload;
     'download_progress': DownloadProgressChannelPayload;
     '': {};
   }
@@ -46,9 +52,14 @@ export declare namespace IChannel {
 
   export type DownloadUpdateChannelPayload = undefined;
 
+  export type CommandExecChannelPayload = {
+    command: string;
+  };
+
   export interface MainChannelMap {
     'download_update': DownloadUpdateChannelPayload;
     'execute_update': ExecuteUpdateChannelPayload;
+    'command_exec': CommandExecChannelPayload;
     '': {};
   }
 

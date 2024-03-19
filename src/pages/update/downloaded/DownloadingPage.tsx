@@ -1,7 +1,7 @@
-import { useElectronApiManager } from "../../../hooks/use-electron-api-manager/use-electron-api-manager.hook";
+import { useElectronApi } from "../../../hooks/use-electron-api/use-electron-api.hook";
 
 export function DownloadedPage() {
-  const electronApiManager = useElectronApiManager();
+  const electronApi = useElectronApi();
 
   return (
     <div className="w-full h-full fixed top-0 left-0 flex flex-wrap gap-2 items-center justify-center bg-slate-50">
@@ -22,7 +22,7 @@ export function DownloadedPage() {
           <button 
             className="inline-flex px-6 py-2 border border-slate-600 cursor-pointer text-sm text-slate-600 hover:bg-slate-200"
             onClick={() => {
-              electronApiManager.electronApi?.sendToMain('execute_update', undefined);
+              electronApi?.sendToMain('execute_update', undefined);
             }}
             >
             예
