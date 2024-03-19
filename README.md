@@ -137,45 +137,47 @@ https://s3.console.aws.amazon.com/s3/home?region=ap-northeast-2#
 2. 버킷에 아래 권한 정책 적용
 ```
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    // 아래 Deny 는 필요 시 설정하세요! 필요 없다면 아래 Deny 정책 부분은 제거하셔도 좋습니다.
-    {
-      "Effect": "Deny",
-      "Principal": "*",
-      "Action": "*",
-      "Resource": "arn:aws:s3:::버킷이름/*",
-      "Condition": {
-        "NotIpAddress": {
-          "aws:SourceIp": "접근허용IP"
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowAppS3Releases",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": [
+                "s3:AbortMultipartUpload",
+                "s3:GetObjectVersion",
+                "s3:ListMultipartUploadParts",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": [
+                "arn:aws:s3:::버킷명",
+                "arn:aws:s3:::버킷명/*"
+            ],
+            "Condition": {
+                "NotIpAddress": {
+                    "aws:SourceIp": "개발PC의 IP주소"
+                }
+            }
+        },
+        {
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectAcl"
+            ],
+            "Resource": [
+                "arn:aws:s3:::버킷명",
+                "arn:aws:s3:::버킷명/*"
+            ],
+            "Condition": {
+                "StringNotEquals": {
+                    "aws:UserAgent": "electron-builder"
+                }
+            }
         }
-      }
-    },
-    {
-      "Sid": "AllowAppS3Releases",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": [
-        "s3:AbortMultipartUpload",
-        "s3:GetObject",
-        "s3:GetObjectAcl",
-        "s3:GetObjectVersion",
-        "s3:ListMultipartUploadParts",
-        "s3:PutObject",
-        "s3:PutObjectAcl"
-      ],
-      "Resource": "arn:aws:s3:::버킷이름/*"
-    },
-    {
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": [
-        "s3:ListBucket",
-        "s3:ListBucketMultipartUploads"
-      ],
-      "Resource": "arn:aws:s3:::버킷이름"
-    }
-  ]
+    ]
 }
 ```
 
