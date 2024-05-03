@@ -1,4 +1,4 @@
-import { IChannel } from '../../interfaces/channel.interface';
+import { IChannelMainToRenderer } from '../../interfaces/channel-main-to-renderer.interface';
 import { commandExecute } from '../utils/common';
 import { mainManager } from '../utils/main-manager';
 
@@ -13,8 +13,9 @@ import { mainManager } from '../utils/main-manager';
 mainManager.listen('command_exec', async(event, payload) => {
   const command = payload.command;
   const result = await commandExecute(command);
-  event.reply('command_result', {
+  const replyPayload: IChannelMainToRenderer.ChannelMap['command_result'] = {
     stdout: result.stdout,
     stderr: result.stderr,
-  } as IChannel.RendererChannelMap['command_result']);
+  };
+  event.reply('command_result', replyPayload);
 });

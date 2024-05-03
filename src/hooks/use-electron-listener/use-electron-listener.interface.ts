@@ -1,12 +1,12 @@
-import { IChannel } from "../../../interfaces/channel.interface";
+import { IChannelMainToRenderer } from "../../../interfaces/channel-main-to-renderer.interface";
 
 export declare namespace IUseElectronListener {
-  export type Listener<T extends (keyof IChannel.RendererChannelMap)> = {
+  export type Listener<T extends (keyof IChannelMainToRenderer.ChannelMap)> = {
     channel: T;
-    callback: (event: Electron.IpcRendererEvent, payload: IChannel.RendererChannelMap[T]) => void;
+    callback: (event: Electron.IpcRendererEvent, payload: IChannelMainToRenderer.ChannelMap[T]) => void;
   }
 
-  export interface Props<T extends (keyof IChannel.RendererChannelMap)> {
+  export interface Props<T extends (keyof IChannelMainToRenderer.ChannelMap)> {
     listener?: Listener<T>;
   }
 }

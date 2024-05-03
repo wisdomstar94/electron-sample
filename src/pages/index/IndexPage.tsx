@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
-import { IChannel } from "../../../interfaces/channel.interface";
 import { useNavigate } from "react-router-dom";
 import { useElectronListener } from "../../hooks/use-electron-listener/use-electron-listener.hook";
 import { IUseElectronListener } from "../../hooks/use-electron-listener/use-electron-listener.interface";
+import { IChannelMainToRenderer } from "../../../interfaces/channel-main-to-renderer.interface";
 
 export function IndexPage() {
-  const [info, setInfo] = useState<IChannel.InfoChannelPayload>();
+  const [info, setInfo] = useState<IChannelMainToRenderer.ChannelMap['info']>();
   const navigate = useNavigate();
 
   const currentVersion = useMemo(() => {

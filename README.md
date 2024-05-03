@@ -78,10 +78,16 @@ pack:linux:dev
 
 # 메인 프로세스와 렌더러 프로세스의 채널과 데이터간 타입추론
 일렉트론은 메인 프로세스(Node.js 영역)와 렌더러 프로세스(브라우저 영역)로 나뉘는데, 이 두 프로세스간 채널을 통해 통신할 때 각 채널별로 주고 받을 데이터에 대한 타입 추론이 되도록 셋팅하였습니다. 
-<br /><br />
-`interface/channel.interface.ts` 파일에 보면 `IChannel` 네임스페이스 밑에 렌더러 프로세스에서 리스닝 가능한 채널과 데이터의 규격 정보가 맵핑되어 있는 `RendererChannelMap` 인터페이스, 메인 프로세스에서 리스닝 가능한 채널과 데이터의 규격 정보가 맵핑되어 있는 `MainChannelMap` 인터페이스가 존재합니다. 
-<br /><br />
-이 레포지토리를 사용하여 일렉트론 앱을 개발 하실 때, 채널에 대한 데이터 규격을 수정하시려면 `interface/channel.interface.ts` 파일을 수정하시면 됩니다.
+
+## main 프로세스에서 renderer 프로세스로 전달하는 채널에 대한 인터페이스 정의 (main -> renderer)
+`interfaces/channel-main-to-renderer.interface.ts` 파일 참조.
+
+## renderer 프로세스에서 main 프로세스로 전달하는 채널에 대한 인터페이스 정의 (renderer -> main)
+`interfaces/channel-renderer-to-main.interface.ts` 파일 참조.
+
+<br />
+
+이 레포지토리를 사용하여 일렉트론 앱을 개발 하실 때, 채널에 대한 데이터 규격을 수정하시려면 위 파일들을 수정하시면 됩니다.
 
 <br /><br />
 

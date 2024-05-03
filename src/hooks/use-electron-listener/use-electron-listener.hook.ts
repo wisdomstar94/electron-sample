@@ -1,8 +1,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ICommon } from '../../../interfaces/common.interface';
-import { IChannel } from "../../../interfaces/channel.interface";
+
 import { IUseElectronListener } from "./use-electron-listener.interface";
+import { IChannelMainToRenderer } from "../../../interfaces/channel-main-to-renderer.interface";
 
 declare global {
   interface Window {
@@ -10,7 +11,7 @@ declare global {
   }
 }
 
-export function useElectronListener<T extends (keyof IChannel.RendererChannelMap)>(props?: IUseElectronListener.Props<T>) {
+export function useElectronListener<T extends (keyof IChannelMainToRenderer.ChannelMap)>(props?: IUseElectronListener.Props<T>) {
   const {
     listener,
   } = props ?? {};

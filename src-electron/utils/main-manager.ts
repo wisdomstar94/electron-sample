@@ -1,17 +1,18 @@
 import { IpcMainEvent, WebContents, ipcMain } from "electron";
-import { IChannel } from "../../interfaces/channel.interface";
+import { IChannelMainToRenderer } from '../../interfaces/channel-main-to-renderer.interface';
+import { IChannelRendererToMain } from '../../interfaces/channel-renderer-to-main.interface';
 
 export const mainManager = {
-  sendToRenderer: <T extends IChannel.RendererChannel>(webContents: WebContents | undefined, channel: T, payload: IChannel.RendererChannelMap[T]) => {
+  sendToRenderer: <T extends  IChannelMainToRenderer.Channel>(webContents: WebContents | undefined, channel: T, payload: IChannelMainToRenderer.ChannelMap[T]) => {
     webContents?.send(channel, payload);
   },
-  reply: <T extends IChannel.RendererChannel>(event: IpcMainEvent, channel: T, payload: IChannel.RendererChannelMap[T]) => {
+  reply: <T extends IChannelMainToRenderer.Channel>(event: IpcMainEvent, channel: T, payload: IChannelMainToRenderer.ChannelMap[T]) => {
     event.reply(channel, payload);
   },
-  listen: <T extends IChannel.MainChannel>(channel: T, func: (event: IpcMainEvent, payload: IChannel.MainChannelMap[T]) => void) => {
+  listen: <T extends IChannelRendererToMain.Channel>(channel: T, func: (event: IpcMainEvent, payload: IChannelRendererToMain.ChannelMap[T]) => void) => {
     ipcMain.on(channel, func);
   },
-  unlisten: <T extends IChannel.MainChannel>(channel: T, func: (event: IpcMainEvent, payload: IChannel.MainChannelMap[T]) => void) => {
+  unlisten: <T extends IChannelRendererToMain.Channel>(channel: T, func: (event: IpcMainEvent, payload: IChannelRendererToMain.ChannelMap[T]) => void) => {
     ipcMain.off(channel, func);
   },
 };
