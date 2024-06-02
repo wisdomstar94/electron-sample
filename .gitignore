@@ -25,6 +25,7 @@ yarn-error.log*
 
 # build
 dist
+electron-builder-config*.js
 
 # env
 .env

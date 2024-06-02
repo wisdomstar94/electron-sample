@@ -1,11 +1,12 @@
-// const builder = require("electron-builder");
-const path = require('path');
-require('dotenv').config({
+import { Configuration } from "electron-builder";
+import path from 'path';
+import { config } from 'dotenv';
+
+config({
   path: path.join(__dirname, '.env.development'),
 });
 
-/** @type {import('electron-builder').Configuration} */
-const config = {
+const defaultConfig: Configuration = {
   productName: "electron-sample",
   appId: "electron-sample",
   asar: true,
@@ -17,7 +18,7 @@ const config = {
   },
   publish: { 
     provider: "s3",
-    bucket: process.env.S3_DEV_DEPLOY_BUCKET_NAME,
+    bucket: process.env.S3_DEV_DEPLOY_BUCKET_NAME ?? '',
     region: process.env.S3_DEV_DEPLOY_BUCKET_REGION,
     acl: "public-read",
   },
@@ -66,5 +67,4 @@ const config = {
   },
 };
 
-// builder.build({ config });
-module.exports = config;
+export default defaultConfig;

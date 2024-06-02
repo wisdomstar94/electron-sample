@@ -1,11 +1,11 @@
 import './electron.dotenv';
+import './src-electron/utils/convert-console-log';
 import { app, BrowserWindow } from 'electron';
 import { checkForUpdates } from './src-electron/auto-update/auto-update';
 import './src-electron/listeners/listeners';
-import { convertConsoleLog, webPreferencesWithDefaultOptions, windowLoadUrlOrFile } from './src-electron/utils/common';
+import { webPreferencesWithDefaultOptions, windowLoadUrlOrFile } from './src-electron/utils/common';
 import { mainManager } from './src-electron/utils/main-manager';
 import { isDev } from './src-electron/utils/is-dev';
-convertConsoleLog();
 
 let mainWindow: BrowserWindow | null;
 

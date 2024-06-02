@@ -107,13 +107,17 @@ pack:linux:dev
 | react:start | 리액트를 로컬에서 테스트하는 용도로 실행하는 스크립트 입니다. | 
 | react:build | 리액트를 index.html 등의 파일들로 빌드하는 스크립트 입니다. | 
 | electron:start | 일렉트론을 로컬에서 테스트하는 용도로 실행하는 스크립트 입니다. | 
-| electron:build | 일렉트론을 .js 등의 파일들로 빌드하는 스크립트 입니다. | 
+| electron:transfile | typescript 로 작성된 일렉트론 코드들을 .js 파일들로 변환하는 스크립트 입니다. | 
+| electron:transfile:builder:config | typescript 로 작성된 electron-builder-config 파일 들을 .js 파일들로 변환하는 스크립트 입니다. | 
+| electron:build | electron-builder 를 이용해서 일렉트론 앱을 빌드하는 스크립트 입니다. (실서비스 용, .env 사용) | 
+| electron:build:dev | electron-builder 를 이용해서 일렉트론 앱을 빌드하는 스크립트 입니다. (개발&테스트 용, .env.development 사용) | 
 | electron:react-wait:start | `wait-on` 패키지를 활용하여, `http://127.0.0.1:3000` 에 대한 정상 응답이 올 때까지 기다리고(즉, 로컬에 리액트가 구동 완료 될 때까지 기다리는 것), 정상 응답이 온 이후에 `electron:start` 스크립트를 실행하는 스크립트 입니다. |
-| dev | `dist/` 폴더를 삭제 후, 일렉트론을 빌드하고 `dist/` 폴더로 `.env` 파일을 복사합니다. 그리고 `concurrently` 패키지를 활용하여 리액트를 로컬에서 구동하고, 구동이 완료되면 일렉트론도 로컬에서 구동되며 일렉트론 앱이 실행되어집니다. (즉, 리액트와 일렉트론 모두 로컬 구동하여 all-in-one 으로 로컬에서 테스트 하고자 한다면 이 스크립트를 실행하시면 됩니다.) |
+| dev | `dist/` 폴더를 삭제 후, 일렉트론 소스 코드들을 js 파일로 변환하고 `dist/` 폴더로 `.env.development` 파일을 복사합니다. 그리고 `concurrently` 패키지를 활용하여 리액트를 로컬에서 구동하고, 구동이 완료되면 일렉트론도 로컬에서 구동되며 일렉트론 앱이 실행되어집니다. (즉, 리액트와 일렉트론 모두 로컬 구동하여 all-in-one 으로 로컬에서 테스트 하고자 한다면 이 스크립트를 실행하시면 되며, 개발하실 때 가장 많이 사용될 명령어가 될 것입니다.) |
 | copy:env | `.env` 파일을 `dist/` 폴더로 복사하는 스크립트 입니다. | 
 | copy:env:dev | `.env.development` 파일을 `.env` 라는 이름으로 `dist/` 폴더로 복사하는 스크립트 입니다. | 
 | del:dist | `dist/` 폴더를 삭제하는 스크립트 입니다. |
-| build | 일랙트론과 리액트를 모두 빌드하는 스크립트 입니다. | 
+| build | 일랙트론과 리액트를 모두 빌드하는 스크립트 입니다. (실서비스용, .env 사용) | 
+| build:dev | 일랙트론과 리액트를 모두 빌드하는 스크립트 입니다. (개발&테스트 용, .env.development 사용) | 
 | pack | `dist` 스크립트를 실행하되 `publish` 옵션을 `never` 로 지정하여 실행합니다. |
 | pack:deploy | `dist` 스크립트를 실행하되 `publish` 옵션을 `always` 로 지정하여 실행합니다. `electron-builder-config.js` 파일의 `publish` 부분에 설정된 곳으로 빌드된 결과물이 업로드 됩니다. |
 | pack:dev | `dist` 스크립트를 실행하되 dev mode 로 빌드하며 `publish` 옵션을 `never` 로 지정하여 실행합니다. |

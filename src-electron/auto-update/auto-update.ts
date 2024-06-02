@@ -1,10 +1,9 @@
 import '../../electron.dotenv';
 import { BrowserWindow, dialog, app } from 'electron';
 import { CancellationToken, UpdateInfo, autoUpdater } from 'electron-updater';
-import { convertConsoleLog, webPreferencesWithDefaultOptions, windowLoadUrlOrFile } from '../utils/common';
+import { webPreferencesWithDefaultOptions, windowLoadUrlOrFile } from '../utils/common';
 import { mainManager } from '../utils/main-manager';
 import { isDev } from '../utils/is-dev';
-convertConsoleLog();
 
 /**
  * ******************************************************************************
